@@ -26,5 +26,16 @@ public class userDAO {
         }
         return null;
     }
+    public boolean createUser(String username, String password, String email) throws SQLException {
+        String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, password);
+            statement.setString(3, email);
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0; // Return true if insert was successful
+        }
+    }
 }
 

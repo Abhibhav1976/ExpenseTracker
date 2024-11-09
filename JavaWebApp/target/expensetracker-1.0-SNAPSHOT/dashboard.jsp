@@ -8,10 +8,14 @@
 <%@ page import="org.example.expensetracker.ExpenseDAO" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,7 +24,8 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f7fb;
+            background-color: #111827;
+            color: #f5f5f7;
             display: flex;
             flex-direction: column; /* Stack content vertically on mobile */
         }
@@ -84,7 +89,7 @@
         }
 
         .content {
-            margin-left: 250px;
+
             padding: 20px;
             flex: 1;
             transition: margin-left 0.3s ease;
@@ -124,7 +129,7 @@
         }
 
         .card {
-            background-color: white;
+            background-color: #1F2937;
             border-radius: 10px;
             padding: 20px;
             width: 30%;
@@ -153,11 +158,12 @@
         .transactions {
             margin-top: 20px;
             display: flex;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
         }
 
         .transactions .left, .transactions .right {
-            background-color: white;
+            background-color: #374151;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -166,11 +172,12 @@
 
         .transactions .left {
             flex: 2;
-            margin-right: 20px;
+            padding-right: 40px;
         }
 
         .transactions .right {
             flex: 1;
+            padding-left: 40px;
         }
 
         .transactions h3 {
@@ -193,11 +200,11 @@
         }
 
         .transactions .table th {
-            background-color: #f5f7fb;
+            background-color: #1F2937;
         }
 
         .transactions .table tr:nth-child(even) {
-            background-color: #f5f7fb;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .transactions .table .status {
@@ -317,6 +324,24 @@
                 font-size: 20px;
             }
         }
+        .navbar {
+            background-color: #000;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        .navbar a:hover {
+            color: #0071e3;
+        }
     </style>
 
 
@@ -324,72 +349,75 @@
 <body>
 <%
     user currentUser = (user) session.getAttribute("currentUser");
-    Allowance allowance = (Allowance) session.getAttribute("allowance");
-    BigDecimal totalAllowance = allowance.getMonthlyAllowance();
+    //Allowance allowance = (Allowance) session.getAttribute("allowance");
+    //BigDecimal totalAllowance = allowance.getMonthlyAllowance();
     //List<Expense> expenses = (List<Expense>) request.getAttribute("expenses");
     ExpenseDAO expenseDAO;
 %>
-<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-<div class="sidebar" id="sidebar">
-    <h1>Expense Tracker</h1>
-    <ul>
-        <li><i class="fas fa-tachometer-alt"></i>DASHBOARD</li>
-        <li><i class="fas fa-exchange-alt"></i>TRANSACTIONS</li>
-        <li><i class="fas fa-credit-card"></i>CARDS</li>
-        <li><i class="fas fa-university"></i>BANK ACCOUNTS</li>
-        <li><i class="fas fa-bell"></i>NOTIFICATIONS</li>
-        <li><i class="fas fa-cog"></i>SETTINGS</li>
-    </ul>
-</div>
+<header class="flex justify-between items-center p-6">
+    <div class="text-2xl font-bold">Expense Tracker</div>
+    <nav class="space-x-4 hidden md:flex">
+        <a href="index.jsp" methods="get" class="hover:text-gray-400">Home</a>
+        <a href="#" class="hover:text-gray-400">Features</a>
+        <a href="#" class="hover:text-gray-400">Pricing</a>
+        <a href="#" class="hover:text-gray-400">Contact</a>
+    </nav>
+    <div class="md:hidden">
+        <button id="menu-button" class="text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+</header>
 
-
+    <div id="mobile-menu" class="hidden md:hidden">
+        <nav class="flex flex-col items-center space-y-4">
+            <a href="#" class="hover:text-gray-400">Home</a>
+            <a href="#" class="hover:text-gray-400">Features</a>
+            <a href="#" class="hover:text-gray-400">Pricing</a>
+            <a href="#" class="hover:text-gray-400">Contact</a>
+        </nav>
+    </div>
 <%-- dashboard.jsp --%>
 <div class="content">
     <div class="header">
-<h1>Welcome, <%= currentUser.getUsername() %></h1>
+<h2>Welcome, <%= currentUser.getUsername() %></h2>
     </div>
+    <%
+        Allowance allowance = (Allowance) request.getAttribute("allowance");
+        BigDecimal totalAllowance = (allowance != null) ? allowance.getMonthlyAllowance() : null;
+        BigDecimal totalExpenses = (BigDecimal) request.getAttribute("totalExpenses");
+        BigDecimal remainingAllowance = (BigDecimal) request.getAttribute("remainingAllowance");
+    %>
     <div class="cards">
         <div class="card">
-<%--
-<p>Monthly Allowance: <%= allowance.getMonthlyAllowance() %></p>
-<p>Remaining Allowance: <%= allowance.getRemainingAllowance() %></p>
---%>
-
-<h3>Monthly Allowance</h3>
-                <div class="amount">
-                    <p>${allowance.monthlyAllowance}</p>
-                </div>
-        </div>
-        <div class="card">
-<h3>Total Expenses</h3>
+            <h3>Monthly Allowance</h3>
             <div class="amount">
-                <p> ${totalExpenses}</p>
+                <p>
+                    <%= totalAllowance != null ? "$" + totalAllowance : "Not Set" %>
+                </p>
             </div>
         </div>
         <div class="card">
-<h3>Remaining Allowance</h3>
+            <h3>Total Expenses</h3>
             <div class="amount">
-                <p> ${remainingAllowance}</p>
+                <p>
+                    <fmt:formatNumber value="${totalExpenses}" type="currency" currencySymbol="$" />
+                </p> <!-- Make sure you define totalExpenses properly -->
             </div>
+        </div>
+        <div class="card">
+            <h3>Remaining Allowance</h3>
+            <div class="amount">
+                <p>
+                    <fmt:formatNumber value="${allowance.monthlyAllowance - totalExpenses}" type="currency" currencySymbol="$" />
+                </p>
+                </p>
+            </div>
+        </div>
     </div>
-</div>
     <div class="transactions">
         <div class="right">
             <div class="table">
-                <div class="expense-controls">
-                    <form action="dashboard" method="POST">
-                        <label for="startDate">Start Date:</label>
-                        <input type="date" id="startDate" name="startDate" required>
-
-                        <label for="endDate">End Date:</label>
-                        <input type="date" id="endDate" name="endDate" required>
-
-                        <button type="submit" name="view" value="previous">Get Previous Expenses</button>
-                    </form>
-                    <a href="dashboard" style="text-decoration: none;">
-                        <button type="button">Back to Dashboard</button>
-                    </a>
-                </div>
                 <%
                     String view = request.getParameter("view");
                     String startDate = request.getParameter("startDate");
@@ -477,6 +505,27 @@
                 <%
                     }
                 %>
+                <!-- Date selection form at the end of the table -->
+                <form action="dashboard" method="POST" class="mb-4">
+                    <div class="mb-4">
+                        <label for="startDate" class="block text-lg font-bold mb-2">Start Date</label>
+                        <input type="date" name="startDate" id="startDate"
+                               class="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="endDate" class="block text-lg font-bold mb-2">End Date</label>
+                        <input type="date" name="endDate" id="endDate"
+                               class="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               required>
+                    </div>
+
+                    <button type="submit" name="view" value="previous"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 transition duration-300">
+                        Get Previous Expenses
+                    </button>
+                </form>
             </div>
         </div>
     <div class="left">
@@ -571,12 +620,19 @@
 </script>
 
 <div class = "container">
-<h2>Update Your Monthly Allowance</h2>
-<form action="allowance" method="post">
-    <input type="text" name="newAllowance" placeholder="New Monthly Allowance" required>
-    <input type="submit" value="Update">
-</form>
-<a href="${pageContext.request.contextPath}/addExpense.jsp">Add New Expense</a>
+    <form action="allowance" method="post" class="mb-4">
+        <div class="mb-4">
+            <label for="newAllowance" class="block text-lg font-bold mb-2">New Monthly Allowance</label>
+            <input type="text" name="newAllowance" id="newAllowance"
+                   class="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   required placeholder="Enter new allowance">
+        </div>
+        <input type="submit" value="Update">
+    </form>
+    <a href="${pageContext.request.contextPath}/addExpense.jsp"
+       class="w-full bg-blue-500 text-white px-6 py-3 rounded-full text-lg hover:bg-blue-600 transition duration-300 text-center block">
+        Add New Expense
+    </a>
 </div>
 </div>
 </body>

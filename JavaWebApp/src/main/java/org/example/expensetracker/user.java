@@ -3,17 +3,18 @@ package org.example.expensetracker;
 import java.math.BigDecimal;
 
 public class user {
-    private int id;
+    private Integer id;
     private String username;
     private String password;
     private String email;
     private BigDecimal allowance;
 
-    public int getId() {
-        return id;
+    public Integer getId() {
+        return id;  // Return Integer to handle null values
     }
-    public void setId(int id) {
-        this.id = id;
+
+    public void setId(Integer id) {
+        this.id = id;  // Set the Integer value, which can be null
     }
     public String getUsername() {
         return username;

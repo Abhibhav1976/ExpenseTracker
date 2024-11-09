@@ -156,9 +156,6 @@ public class LoginServlet extends HttpServlet {
                     HttpSession session = req.getSession();
                     session.setAttribute("currentUser", currentUser);
 
-                    Allowance allowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
-                    session.setAttribute("allowance", allowance);
-
                     List<Expense> expenses = expenseDAO.getExpensesForUser(currentUser.getId());
                     session.setAttribute("expenses", expenses);
 
@@ -167,10 +164,7 @@ public class LoginServlet extends HttpServlet {
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
                     session.setAttribute("totalExpenses", totalExpenses);
 
-                    BigDecimal remainingAllowance = allowance.getMonthlyAllowance().subtract(totalExpenses);
-                    session.setAttribute("remainingAllowance", remainingAllowance);
-
-                    // Redirect to dashboard for web app
+                    // Redirect to dashboard
                     resp.sendRedirect(req.getContextPath() + "/dashboard");
                 } else {
                     resp.sendRedirect("login.jsp");

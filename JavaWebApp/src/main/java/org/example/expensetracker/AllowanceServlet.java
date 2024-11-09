@@ -41,7 +41,6 @@ public class AllowanceServlet extends HttpServlet {
         user currentUser = (user) req.getSession().getAttribute("currentUser");
 
         if (currentUser == null) {
-            // Handle session expiration or redirect to login
             resp.sendRedirect("login.jsp");
             return;
         }
@@ -105,8 +104,14 @@ public class AllowanceServlet extends HttpServlet {
             // Update the monthly allowance in the database
             allowanceDAO.updateMonthlyAllowance(currentUser.getId(), newAllowance);
 
-            // Fetch the updated allowance for the user
+            System.out.println("User ID: " + currentUser.getId()); // Debugging output to check user ID
             Allowance updatedAllowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
+            if (updatedAllowance == null) {
+                allowanceDAO.initialAllowance(currentUser.getId());
+
+                // After initializing, fetch the allowance again
+                updatedAllowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
+            }
 
             // Fetch the user's expenses
             List<Expense> expenses = expenseDAO.getExpensesForUser(currentUser.getId());
@@ -131,5 +136,4 @@ public class AllowanceServlet extends HttpServlet {
             throw new ServletException(e);
         }
     }
-
 }

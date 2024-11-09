@@ -113,8 +113,7 @@ public class DashboardServlet extends HttpServlet {
             }
         } else {
             // Web app: Render dashboard JSP
-            if (session == null) {
-                // Session is null, respond with a user-friendly alert or redirect to login page
+            if (session == null || currentUser == null) {
                 resp.setContentType("text/html");
                 try (PrintWriter out = resp.getWriter()) {
                     out.println("<script type=\"text/javascript\">");
@@ -126,33 +125,28 @@ public class DashboardServlet extends HttpServlet {
             }
 
             try {
-                // Check if the user is authenticated
-                if (currentUser == null) {
-                    throw new ServletException("User not authenticated.");
+                Allowance allowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
+                System.out.println("Fetched allowance: " + allowance);  // Debug: Check the fetched allowance
+
+                // Check if the allowance is null
+                if (allowance == null || allowance.getRemainingAllowance().compareTo(BigDecimal.ZERO) == 0) {
+                    System.out.println("initialAllowance being run");
+                    allowanceDAO.initialAllowance(currentUser.getId()); // Initialize allowance if zero
+                    allowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
                 }
 
-                Allowance allowance = allowanceDAO.getAllowanceForUser(currentUser.getId());
                 req.setAttribute("allowance", allowance);
 
-                // Fetch only current expenses
                 List<Expense> expenses = expenseDAO.getExpensesForUser(currentUser.getId());
                 req.setAttribute("expenses", expenses);
-               /* String startDateParam = req.getParameter("startDate");
-                String endDateParam = req.getParameter("endDate");
-                List<Expense> prevExpenses;
 
-                if (startDateParam != null && endDateParam != null) {
-                    LocalDate startDate = LocalDate.parse(startDateParam);
-                    LocalDate endDate = LocalDate.parse(endDateParam);
-                    // Fetch previous expenses within the date range
-                    prevExpenses = expenseDAO.getPrevExpensesForUser(currentUser.getId(), startDate, endDate);
-                } else {
-                    // No dates provided, fetch all previous expenses
-                    prevExpenses = expenseDAO.getPrevExpensesForUser(currentUser.getId(), null, null);
-                }
+                BigDecimal totalExpenses = expenses.stream()
+                        .map(Expense::getAmount)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                session.setAttribute("totalExpenses", totalExpenses);
 
-                req.setAttribute("previousExpenses", prevExpenses); */
-
+                BigDecimal remainingAllowance = allowance.getMonthlyAllowance().subtract(totalExpenses);
+                session.setAttribute("remainingAllowance", remainingAllowance);
 
                 RequestDispatcher dispatcher = req.getRequestDispatcher("dashboard.jsp");
                 dispatcher.forward(req, resp);
