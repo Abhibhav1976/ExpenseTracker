@@ -1,4 +1,4 @@
-Expense Tracker Application
+# Expense Tracker Application
 
 Welcome to the Expense Tracker! This application is designed to help you take control of your finances with ease and simplicity. Track your spending, manage your allowance, and view insightful reports to stay on top of your budget.
 
@@ -75,7 +75,7 @@ Adding A New Expense:
 
 Technologies Used
 
-•	Backend: Java (Spring Boot), MySQL
+•	Backend: Java (Servlet), MySQL
 •	Frontend: HTML, CSS, JavaScript, Thymeleaf
 •	Build Tool: Maven
 
