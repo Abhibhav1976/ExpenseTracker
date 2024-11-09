@@ -54,6 +54,25 @@ Add Expense	Add new expenses with categories and descriptions for detailed track
 View Reports	Access visual reports to get insights into spending trends by category and month.
 Settings	Adjust your monthly allowance and view user settings.
 
+
+Home Page:
+
+![Screenshot 2024-11-09 at 9 57 57 PM](https://github.com/user-attachments/assets/66fdfc1b-b53f-49c4-9555-11b87b63c120)
+
+Login Page: 
+
+![Screenshot 2024-11-09 at 9 59 45 PM](https://github.com/user-attachments/assets/330dee3a-9f3e-4c19-b602-a0cfcfaade93)
+
+Dashboard:
+
+![Screenshot 2024-11-09 at 10 07 52 PM](https://github.com/user-attachments/assets/0c0246b1-9306-4125-9401-ce11efcfd208)
+
+Adding A New Expense:
+
+![Screenshot 2024-11-09 at 10 09 08 PM](https://github.com/user-attachments/assets/2b43b860-c8d2-4c11-a7f3-a124d2c9c8b0)
+
+
+
 Technologies Used
 
 •	Backend: Java (Spring Boot), MySQL
@@ -69,4 +88,5 @@ This Expense Tracker is here to make financial management easy, insightful, and 
 
 # Connect with me
 - [LinkedIn](https://www.linkedin.com/in/abhibhav-raj-singh-721432300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
+
 
