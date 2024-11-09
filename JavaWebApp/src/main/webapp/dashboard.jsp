@@ -393,7 +393,7 @@
             <h3>Monthly Allowance</h3>
             <div class="amount">
                 <p>
-                    <%= totalAllowance != null ? "$" + totalAllowance : "Not Set" %>
+                    <%= totalAllowance != null ? "" + totalAllowance : "Not Set" %>
                 </p>
             </div>
         </div>
@@ -401,7 +401,7 @@
             <h3>Total Expenses</h3>
             <div class="amount">
                 <p>
-                    <fmt:formatNumber value="${totalExpenses}" type="currency" currencySymbol="$" />
+                    <fmt:formatNumber value="${totalExpenses}" type="currency" currencySymbol="" />
                 </p> <!-- Make sure you define totalExpenses properly -->
             </div>
         </div>
@@ -409,7 +409,7 @@
             <h3>Remaining Allowance</h3>
             <div class="amount">
                 <p>
-                    <fmt:formatNumber value="${allowance.monthlyAllowance - totalExpenses}" type="currency" currencySymbol="$" />
+                    <fmt:formatNumber value="${allowance.monthlyAllowance - totalExpenses}" type="currency" currencySymbol="" />
                 </p>
                 </p>
             </div>
@@ -529,13 +529,15 @@
             </div>
         </div>
     <div class="left">
-            <h3>
-                Expense Chart
+        <div class="left bg-gray-900 rounded-2xl p-6">
+            <h3 class="text-2xl font-semibold text-white mb-6">
+                Expense Overview
             </h3>
             <div class="chart">
-        <canvas id="expenseChart" width="600" height="300"></canvas>
-             </div>
+                <canvas id="expenseChart" width="600" height="300"></canvas>
+            </div>
         </div>
+    </div>
     </div>
 
 
@@ -565,53 +567,117 @@
             toggleSidebar();
         }
     });
-    // Fetch expense data
     fetch('expenseData')
         .then(response => response.json())
         .then(data => {
             const labels = Object.keys(data);
             const values = Object.values(data);
-            const totalAllowance = <%= totalAllowance %>; // Pass allowance from JSP to JS
+            const totalAllowance = <%= totalAllowance %>;
 
+            // Create gradient
             const ctx = document.getElementById('expenseChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+            gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+            // Chart configuration
             const myChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Expenses by Category',
+                        label: 'Expenses',
                         data: values,
-                        backgroundColor: 'rgba(0, 224, 224, 0.6)',
-                        borderColor: 'rgba(0, 224, 224, 1)',
-                        borderWidth: 1
-                    }]
+                        backgroundColor: gradient,
+                        borderColor: 'rgb(99, 102, 241)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: 'rgb(99, 102, 241)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                        {
+                            label: 'Monthly Allowance',
+                            data: Array(labels.length).fill(totalAllowance),
+                            borderColor: 'rgba(239, 68, 68, 0.8)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            pointRadius: 0
+                        }]
                 },
                 options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Amount'
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: '#9CA3AF',
+                                font: {
+                                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#9CA3AF',
+                            bodyColor: '#fff',
+                            bodyFont: {
+                                size: 14,
+                                weight: '500'
+                            },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.parsed.y.toFixed(2)}`;
+                                }
                             }
                         }
                     },
-                    plugins: {
-                        annotation: {
-                            annotations: {
-                                line1: {
-                                    type: 'line',
-                                    yMin: totalAllowance,
-                                    yMax: totalAllowance,
-                                    borderColor: 'red',
-                                    borderWidth: 2,
-                                    label: {
-                                        content: 'Total Allowance',
-                                        enabled: true,
-                                        position: 'end'
-                                    }
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#9CA3AF',
+                                font: {
+                                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+                                    size: 12
                                 }
                             }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(55, 65, 81, 0.3)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#9CA3AF',
+                                font: {
+                                    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial',
+                                    size: 12
+                                },
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.4
                         }
                     }
                 }
