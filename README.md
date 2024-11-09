@@ -66,3 +66,7 @@ Future Enhancements
 •	Enhanced Analytics: AI based Additional insights, such as savings tips based on spending habits.
 
 This Expense Tracker is here to make financial management easy, insightful, and achievable for everyone. Enjoy taking control of your finances!
+
+# Connect with me
+- [LinkedIn](https://www.linkedin.com/in/abhibhav-raj-singh-721432300?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
+
