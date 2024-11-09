@@ -4,17 +4,24 @@ Welcome to the Expense Tracker! This application is designed to help you take co
 
 Features
 
-	•	Personalized Allowance & Spending Limits
-	•	Set your monthly allowance and track how much you have left each month.
-	•	Automatically updates based on your expenses.
-	•	Expense Tracking
-	•	Easily add, edit, or delete expenses.
-	•	Categorize expenses to see where your money goes.
-	•	Visual Reports
-	•	View monthly summaries of your expenses.
-	•	Access visual reports with charts to make budgeting easier.
-	•	Mobile & Desktop Friendly
-	•	Responsive design that works seamlessly across mobile and desktop devices
+• Personalized Allowance & Spending Limits
+   •	Set your monthly allowance and track how much you have left each month.
+   •	Automatically updates based on your expenses.
+   
+   
+• Expense Tracking
+   •	Easily add, edit, or delete expenses.
+   •	Categorize expenses to see where your money goes.
+
+   
+• Visual Reports
+   •	View monthly summaries of your expenses.
+   •	Access visual reports with charts to make budgeting easier.
+
+   
+• Mobile & Desktop Friendly
+   •	Responsive design that works seamlessly across mobile and desktop devices
+   
 
  Installation
 
@@ -37,3 +44,25 @@ Follow these steps to set up the Expense Tracker web app on your local machine:
    	
  6. Access the Application
     •	Open your browser and navigate to http://localhost:8080.
+
+
+Usage Guide
+
+Feature		Description
+Dashboard	Overview of your monthly allowance, total expenses, and remaining balance.
+Add Expense	Add new expenses with categories and descriptions for detailed tracking.
+View Reports	Access visual reports to get insights into spending trends by category and month.
+Settings	Adjust your monthly allowance and view user settings.
+
+Technologies Used
+
+•	Backend: Java (Spring Boot), MySQL
+•	Frontend: HTML, CSS, JavaScript, Thymeleaf
+•	Build Tool: Maven
+
+Future Enhancements
+
+•	Mobile Application: An iOS app version for on-the-go tracking (coming soon!).
+•	Enhanced Analytics: AI based Additional insights, such as savings tips based on spending habits.
+
+This Expense Tracker is here to make financial management easy, insightful, and achievable for everyone. Enjoy taking control of your finances!
